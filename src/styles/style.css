@@ -1,0 +1,10 @@
+/* src/styles/styles.css */
+.ProseMirror {
+  width: 80%;
+  height: 100vh;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-height: 150px;
+  outline: none;
+}
