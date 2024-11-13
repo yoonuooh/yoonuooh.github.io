@@ -10,40 +10,54 @@ import Layout from "./components/layout"
 import ProtectRoute from "./components/protected-route"
 import Editor from "./editor"
 
+const Wrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+`;
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectRoute>
-        <Layout />
-      </ProtectRoute>
+        <Wrapper>
+          <Layout />
+        </Wrapper>
+      </ProtectRoute> 
     ),
     children: [
       {
         path: "",
-        element: <Home />,
+        element: (
+          <Wrapper>
+            <Home />
+          </Wrapper>
+        ),
       },
     ],
   },
   {
     path: "/create-account",
-    element: <CreateAccount />,
+    element: (
+      <Wrapper>
+        <CreateAccount />
+      </Wrapper>
+    ),
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <Wrapper>
+        <Login />
+      </Wrapper>
+    ),
   },
   {
     path: "/editor",
     element: <Editor />,
   },
 ]);
-
-const Wrapper = styled.div`
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-`;
 
 function App() {
   const [isLoading, setLoading] = useState(true);
@@ -54,11 +68,10 @@ function App() {
   useEffect(() => {
     init();
   }, []);
+
   return (
     <>
-      <Wrapper>
-        {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-      </Wrapper>
+      {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
     </>
   );
 }

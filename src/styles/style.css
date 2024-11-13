@@ -1,10 +1,183 @@
-/* src/styles/styles.css */
-.ProseMirror {
+/* Basic editor styles */
+@font-face {
+  font-family: 'NanumSquare';
+  src: url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Button */
+.button-group {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px; 
   width: 80%;
-  height: 100vh;
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  min-height: 150px;
-  outline: none;
+}
+.button-group button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  svg {
+    width: 30px;
+    fill: white;
+  }
+}
+
+.tiptap {
+  height: 80%;
+  width: 80%;
+  border: 2px solid lightgrey;
+  padding: 10px 20px;
+  :first-child {
+    margin-top: 0;
+    font-family: "NanumSquare";
+    --custom_value_table_border: 2px;
+    --custom_value_border_radius: 16px;
+    --custom_color_accent: #667BC6;
+    --custom_color_table_head: #D2DAFF;
+    --custom_color_table_odd: #FFFFFF;
+    --custom_color_table_even: #F5F5F5;
+    --custom_color_table_border: #000000;
+    --custom_color_code: #555555;
+  }
+
+  /* List styles */
+  ul, 
+  ol {
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
+    
+    li p {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+  }
+
+  /* Heading styles */
+  h1, 
+  h2, 
+  h3, 
+  h4, 
+  h5, 
+  h6 {
+    line-height: 1.1;
+    margin-top: 2.5rem;
+    text-wrap: pretty;
+  }
+  h1, 
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  h1 { 
+    font-size: 1.4rem; 
+  }
+  h2 { 
+    font-size: 1.2rem; 
+  }
+  h3 { 
+    font-size: 1.1rem; 
+  }
+  h4, 
+  h5, 
+  h6 { 
+    font-size: 1rem; 
+  }
+
+  /* Code and preformatted text styles */
+  code {
+    font-size: 18px;
+    font-family: 'NanumSquare';
+    color: white;
+    background-color: var(--custom_color_code);
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+    padding: 0.25em 0.3em;
+  }
+  pre {
+    font-size: 18px;
+    background: var(--custom_color_code);
+    border-radius: 0.5rem;
+    color: white;
+    font-family: 'NanumSquare';
+    margin: 1.5rem 0;
+    padding: 0.75rem 1rem;
+  }
+  blockquote {
+    border-left: 3px solid lightseagreen;
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+  }
+  hr {
+    border: 1px solid black;
+    margin: 2rem 0;
+  }
+  a {
+    cursor: pointer;
+    color: var(--custom_color_accent);
+  }
+  u {
+    text-underline-offset: 6px;
+  }
+
+  /* ----- Table ----- */
+  table {
+    border-collapse: separate;
+    border: var(--custom_value_table_border) solid var(--custom_color_table_border);
+    border-radius: var(--custom_value_border_radius);
+    border-spacing: 0;
+    overflow: hidden;
+  }
+  /* Table Head */
+  tbody > tr:first-child {
+    border-bottom: var(--custom_value_table_border) solid var(--custom_color_table_border);
+  }
+  tbody > tr:last-child > th:first-child {
+    border-bottom: none;
+  }
+  tbody > tr > th {
+    background-color: var(--custom_color_table_head);
+    border-bottom: var(--custom_value_table_border) solid var(--custom_color_table_border);
+    border-right: var(--custom_value_table_border) solid var(--custom_color_table_border);
+  }
+  tbody > tr:first-child > th:last-child {
+    border-right: none;
+  }
+  /* Table Body Odd Row */
+  tbody > tr:nth-child(odd):not(:first-child) {
+    background-color: var(--custom_color_table_odd);
+  }
+  /* Table Body Even Row */
+  tbody > tr:nth-child(even):not(:first-child) {
+    background-color: var(--custom_color_table_even);
+  }
+  /* Table Body Internal */
+  th > p {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  th, td {
+    vertical-align: center;
+  }
+  td > p {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }
