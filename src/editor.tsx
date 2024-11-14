@@ -101,8 +101,8 @@ const Editor = () => {
   const [title, setTitle] = useState("");
   const { urlTitle = "Undefined Title" } = useParams<{ urlTitle: string }>();
   let data = null;
-  //const server_ip = "http://yoonuooh.duckdns.org";
-  const server_ip = "http://192.168.219.103";
+  const server_ip = "http://yoonuooh.duckdns.org";
+  //const server_ip = "http://192.168.219.103";
   const server_port = "5000";
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

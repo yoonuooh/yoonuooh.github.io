@@ -42,8 +42,8 @@ const MenuItem = styled.div`
 `;
 
 export default function Layout() {
-  //export const server_ip = "http://yoonuooh.duckdns.org";
-  const server_ip = "http://192.168.219.103";
+  const server_ip = "http://yoonuooh.duckdns.org";
+  //const server_ip = "http://192.168.219.103";
   const server_port = "5000";
 
   const navigate = useNavigate();
