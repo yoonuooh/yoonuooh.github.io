@@ -42,6 +42,10 @@ const MenuItem = styled.div`
 `;
 
 export default function Layout() {
+  //export const server_ip = "http://yoonuooh.duckdns.org";
+  const server_ip = "http://192.168.219.103";
+  const server_port = "5000";
+
   const navigate = useNavigate();
   let [data, setData] = useState<any[]>([]);
 
@@ -55,10 +59,13 @@ export default function Layout() {
   const goEditor = () => {
     navigate("/editor");
   }
+  const goEditorSpecific = (title: string) => {
+    navigate("/editor/" + title);
+  }
 
-  const loadDataFromBackend = async () => {
+  const loadAllDataFromBackend = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/load_data', {
+      const response = await fetch(`${server_ip}:${server_port}/api/load_all_data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +81,7 @@ export default function Layout() {
   };
 
   useEffect(() => {
-    loadDataFromBackend();
+    loadAllDataFromBackend();
   }, [])
 
   return (
@@ -98,8 +105,9 @@ export default function Layout() {
           {data.length > 0 ? (
             data.map((item, index) => (
               <div key={index}>
-                <p>{item.title}</p>
-                <p>{item.created_at}</p>
+                <button onClick={() => goEditorSpecific(item.title)}>
+                  {item.title + "\n" + item.created_at}
+                </button>
               </div>
             ))
           ) : (

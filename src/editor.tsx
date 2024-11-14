@@ -1,5 +1,5 @@
 import { useEditor, EditorContent } from "@tiptap/react"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import StarterKit from "@tiptap/starter-kit"
 import Document from '@tiptap/extension-document'
 import BulletList from "@tiptap/extension-bullet-list"
@@ -24,6 +24,7 @@ import TextAlign from '@tiptap/extension-text-align'
 import Image from '@tiptap/extension-image'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import { Form, Input } from "./components/auth.components"
+import { useParams } from "react-router-dom"
 
 const Editor = () => {
   const editor = useEditor({
@@ -96,7 +97,13 @@ const Editor = () => {
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }, [editor])
 
+
   const [title, setTitle] = useState("");
+  const { urlTitle = "Undefined Title" } = useParams<{ urlTitle: string }>();
+  let data = null;
+  //const server_ip = "http://yoonuooh.duckdns.org";
+  const server_ip = "http://192.168.219.103";
+  const server_port = "5000";
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -110,7 +117,7 @@ const Editor = () => {
   const sendDataToBackend = async (title: string) => {
     const message = editor.getJSON();
     try {
-      const response = await fetch('http://localhost:5000/api/insert_data', {
+      const response = await fetch(`${server_ip}:${server_port}/api/insert_data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -124,27 +131,28 @@ const Editor = () => {
     }
   };
 
-  const loadDataFromBackend = async () => {
+  const loadDataFromBackend = async (title: string) => {
     try {
-      const response = await fetch('http://localhost:5000/api/load_data', {
+      const response = await fetch(`${server_ip}:${server_port}/api/load_data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ title }),
       });
-      const data = await response.json();
+      data = await response.json();
       editor.commands.setContent(data[0].content);
     } catch (error) {
       console.error('Error sending data to server:', error);
     }
   };
 
+  useEffect(() => {
+    loadDataFromBackend(urlTitle);
+  }, [])
+
   return (
     <>
-      <button onClick={loadDataFromBackend}>
-        Load
-      </button>
       <div className="control-group">
         <div className="button-group">
           <button

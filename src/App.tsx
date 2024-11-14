@@ -53,6 +53,10 @@ const router = createBrowserRouter([
     path: "/editor",
     element: <Editor />,
   },
+  {
+    path: "/editor/:urlTitle",
+    element: <Editor />,
+  },
 ]);
 
 function App() {
