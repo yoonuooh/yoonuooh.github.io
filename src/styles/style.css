@@ -95,17 +95,17 @@
 
   /* Code and preformatted text styles */
   code {
-    font-size: 18px;
+    font-size: 16px;
     font-family: 'NanumSquare';
     color: white;
     background-color: var(--custom_color_code);
     border-radius: 0.4rem;
     font-size: 0.85rem;
-    padding: 0.25em 0.3em;
+    padding: 5px 5px;
   }
-  pre {
-    font-size: 18px;
-    background: var(--custom_color_code);
+  pre, pre>code {
+    font-size: 16px;
+    background-color: var(--custom_color_code);
     border-radius: 0.5rem;
     color: white;
     font-family: 'NanumSquare';

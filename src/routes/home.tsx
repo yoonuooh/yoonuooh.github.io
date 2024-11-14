@@ -1,9 +1,8 @@
-import Documents from "../components/documents";
 
 export default function Home() {
   return (
     <>
-      <Documents />
+      <h1>Home</h1>
     </>
   );
 }

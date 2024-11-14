@@ -26,16 +26,12 @@ const router = createBrowserRouter([
         </Wrapper>
       </ProtectRoute> 
     ),
-    children: [
-      {
-        path: "",
-        element: (
-          <Wrapper>
-            <Home />
-          </Wrapper>
-        ),
-      },
-    ],
+  },
+  {
+    path: "",
+    element: (
+        <Home />
+    ),
   },
   {
     path: "/create-account",

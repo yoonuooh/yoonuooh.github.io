@@ -1,5 +1,5 @@
 import { useEditor, EditorContent } from "@tiptap/react"
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import StarterKit from "@tiptap/starter-kit"
 import Document from '@tiptap/extension-document'
 import BulletList from "@tiptap/extension-bullet-list"
@@ -23,6 +23,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign from '@tiptap/extension-text-align'
 import Image from '@tiptap/extension-image'
 import Dropcursor from '@tiptap/extension-dropcursor'
+import { Form, Input } from "./components/auth.components"
 
 const Editor = () => {
   const editor = useEditor({
@@ -65,12 +66,12 @@ const Editor = () => {
       Image,
       Dropcursor,
     ],
-    content: "",
   });
 
   if (!editor) {
     return null;
   }
+
   const addImage = useCallback(() => {
     const url = window.prompt('URL')
     if (url) {
@@ -95,8 +96,55 @@ const Editor = () => {
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }, [editor])
 
+  const [title, setTitle] = useState("");
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  }
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (title === "") return;
+    sendDataToBackend(title);
+  }
+  
+  const sendDataToBackend = async (title: string) => {
+    const message = editor.getJSON();
+    try {
+      const response = await fetch('http://localhost:5000/api/insert_data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, message }),
+      });
+      const data = await response.json();
+      console.log('Response from server:', data);
+    } catch (error) {
+      console.error('Error sending data to sever:', error);
+    }
+  };
+
+  const loadDataFromBackend = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/load_data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title }),
+      });
+      const data = await response.json();
+      editor.commands.setContent(data[0].content);
+    } catch (error) {
+      console.error('Error sending data to server:', error);
+    }
+  };
+
   return (
     <>
+      <button onClick={loadDataFromBackend}>
+        Load
+      </button>
       <div className="control-group">
         <div className="button-group">
           <button
@@ -346,9 +394,9 @@ const Editor = () => {
             </svg>
           </button>
           <button onClick={() => editor.chain().focus().deleteColumn().run()}>
-          <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5v14m-6-8h6m-6 4h6m4.506-1.494L15.012 12m0 0 1.506-1.506M15.012 12l1.506 1.506M15.012 12l-1.506-1.506M20 19H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1Z"/>
-</svg>
+            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5v14m-6-8h6m-6 4h6m4.506-1.494L15.012 12m0 0 1.506-1.506M15.012 12l1.506 1.506M15.012 12l-1.506-1.506M20 19H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1Z"/>
+            </svg>
           </button>
           <button onClick={() => editor.chain().focus().addRowBefore().run()}>
             <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -392,6 +440,19 @@ const Editor = () => {
           </button>
         </div>
       </div>
+      <Form onSubmit={onSubmit}>
+        <Input
+          onChange={onChange}
+          name="title"
+          placeholder="Title"
+          type="text"
+          required
+        />
+        <Input
+          type="submit"
+          value="Save"
+        />
+      </Form>
       <EditorContent editor={editor} />
     </>
   );

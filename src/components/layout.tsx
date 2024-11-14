@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { styled } from "styled-components";
+import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
   display: grid;
@@ -42,6 +43,8 @@ const MenuItem = styled.div`
 
 export default function Layout() {
   const navigate = useNavigate();
+  let [data, setData] = useState<any[]>([]);
+
   const onLogOut = async () => {
     const ok = confirm("Are you sure?");
     if (ok) {
@@ -52,6 +55,27 @@ export default function Layout() {
   const goEditor = () => {
     navigate("/editor");
   }
+
+  const loadDataFromBackend = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/load_data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: "",
+      });
+      data = await response.json();
+      setData(data);
+      console.log(data);
+    } catch (error) {
+      console.error('Error sending data to server:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadDataFromBackend();
+  }, [])
 
   return (
     <>
@@ -70,6 +94,18 @@ export default function Layout() {
             </button>
           </MenuItem>
         </Menu>
+        <div>
+          {data.length > 0 ? (
+            data.map((item, index) => (
+              <div key={index}>
+                <p>{item.title}</p>
+                <p>{item.created_at}</p>
+              </div>
+            ))
+          ) : (
+            <p>None</p>
+          )}
+        </div>
       </Wrapper>
     </>
   );
