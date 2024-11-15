@@ -98,20 +98,26 @@ const Editor = () => {
   }, [editor])
 
 
-  const [title, setTitle] = useState("");
-  const { urlTitle = "Undefined Title" } = useParams<{ urlTitle: string }>();
+  const [sendTitle, setSendTitle] = useState("");
+  const [loadTitle, setLoadTitle] = useState("");
+  const [loadCreatedAt, setLoadCreatedAt] = useState("");
+  const { urlTitle = "" } = useParams<{ urlTitle: string }>();
   let data = null;
   const server_ip = "http://yoonuooh.duckdns.org";
   //const server_ip = "http://192.168.219.103";
   const server_port = "5000";
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    setSendTitle(e.target.value);
   }
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title === "") return;
-    sendDataToBackend(title);
+    if (sendTitle === "") return;
+    if (urlTitle === "") {
+      sendDataToBackend(sendTitle);
+    } else {
+      updateDataToBackend(sendTitle);
+    }
   }
   
   const sendDataToBackend = async (title: string) => {
@@ -142,10 +148,29 @@ const Editor = () => {
       });
       data = await response.json();
       editor.commands.setContent(data[0].content);
+      setLoadTitle(data[0].title);
+      setLoadCreatedAt(data[0].created_at);
     } catch (error) {
       console.error('Error sending data to server:', error);
     }
   };
+
+  const updateDataToBackend = async (title: string) => {
+    const content = editor.getJSON();
+    try {
+      const response = await fetch(`${server_ip}:${server_port}/api/update_data`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, content }),
+      });
+      const data = await response.json();
+      console.log('Response from server:', data);
+    } catch (error) {
+      console.error('Error sending data to sever:', error);
+    }
+  }
 
   useEffect(() => {
     loadDataFromBackend(urlTitle);
@@ -448,9 +473,11 @@ const Editor = () => {
           </button>
         </div>
       </div>
+      <p>{loadCreatedAt}</p>
       <Form onSubmit={onSubmit}>
         <Input
           onChange={onChange}
+          value={loadTitle}
           name="title"
           placeholder="Title"
           type="text"
@@ -458,7 +485,7 @@ const Editor = () => {
         />
         <Input
           type="submit"
-          value="Save"
+          value={urlTitle !== "" ? "Update" : "Save"}
         />
       </Form>
       <EditorContent editor={editor} />
