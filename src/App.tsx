@@ -30,7 +30,7 @@ const router = createBrowserRouter([
   {
     path: "",
     element: (
-        <Home />
+      <Home />
     ),
   },
   {
@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     element: <Editor />,
   },
   {
-    path: "/editor/:urlTitle",
+    path: "/editor/:urlId",
     element: <Editor />,
   },
 ]);

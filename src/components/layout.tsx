@@ -42,8 +42,8 @@ const MenuItem = styled.div`
 `;
 
 export default function Layout() {
-  const server_ip = "http://yoonuooh.duckdns.org";
-  //const server_ip = "http://192.168.219.103";
+  //const server_ip = "https://yoonuooh.duckdns.org";
+  const server_ip = "http://192.168.219.103";
   const server_port = "5000";
 
   const navigate = useNavigate();
@@ -56,11 +56,8 @@ export default function Layout() {
       navigate("/login");
     }
   };
-  const goEditor = () => {
-    navigate("/editor");
-  }
-  const goEditorSpecific = (title: string) => {
-    navigate("/editor/" + title);
+  const goNotice = (id: string) => {
+    navigate("/editor/" + id);
   }
 
   const loadAllDataFromBackend = async () => {
@@ -80,14 +77,14 @@ export default function Layout() {
     }
   };
 
-  const deleteDataFromBackend = async (title: string, created_at: string) => {
+  const deleteDataFromBackend = async (id: string) => {
     try {
       const response = await fetch(`${server_ip}:${server_port}/api/delete_data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, created_at }),
+        body: JSON.stringify({ id }),
       });
       data = await response.json();
       setData(data);
@@ -95,6 +92,7 @@ export default function Layout() {
     } catch (error) {
       console.error('Error sending data to server:', error);
     }
+    loadAllDataFromBackend();
   }
 
   useEffect(() => {
@@ -103,11 +101,10 @@ export default function Layout() {
 
   return (
     <>
-      <Outlet />
       <Wrapper>
         <Menu>
           <MenuItem>
-            <button onClick={goEditor}>
+            <button onClick={() => goNotice("")}>
               Go to Editor
             </button>
           </MenuItem>
@@ -122,10 +119,10 @@ export default function Layout() {
           {data.length > 0 ? (
             data.map((item, index) => (
               <div key={index}>
-                <button onClick={() => goEditorSpecific(item.title)}>
-                  {item.title + "\n" + item.created_at}
+                <button onClick={() => goNotice(item._id)}>
+                  {item.title + "\n" + item.created_at + "\n" + item.modified_at}
                 </button>
-                <button onClick={() => deleteDataFromBackend(item.title, item.created_at)}>
+                <button onClick={() => deleteDataFromBackend(item._id)}>
                   {item.title + "\nDelete"}
                 </button>
               </div>
@@ -135,6 +132,7 @@ export default function Layout() {
           )}
         </div>
       </Wrapper>
+      <Outlet />
     </>
   );
 }
