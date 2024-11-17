@@ -79,7 +79,7 @@ html, body, #root {
   height: 26px;
 }
 /* ProseMirror Parent div */
-#root > div > div > div:nth-child(2) {
+#root > div > div > div:nth-child(2):not(.button-group) {
   width: 80%;
   height: 100%;
   display: flex;

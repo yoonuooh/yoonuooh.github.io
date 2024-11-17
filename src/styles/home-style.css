@@ -36,6 +36,10 @@ html, body, #root {
   width: 70%;
   height: 30px;
 }
+.name {
+  width: 20%;
+  text-align: center;
+}
 .new-page {
   width: 12%;
   height: 30px;
@@ -43,6 +47,7 @@ html, body, #root {
 .log-out {
   width: 10%;
   height: 30px;
+  margin-left: 10px;
 }
 
 .pages-head {
@@ -63,7 +68,7 @@ html, body, #root {
   align-items: center;
 }
 .page-component-head * {
-  width: 60%;
+  width: 30%;
   text-align: center;
 
   &:first-child {
@@ -71,7 +76,7 @@ html, body, #root {
     text-align: left;
   }
   &:last-child {
-    width: 20%;
+    width: 10%;
     margin-left: 15px;
   }
 }
@@ -94,7 +99,7 @@ html, body, #root {
   align-items: center;
 }
 .page-component * {
-  width: 60%;
+  width: 30%;
   text-align: center;
 
   &:first-child {
@@ -106,8 +111,10 @@ html, body, #root {
     text-align: left;
   }
   &:last-child {
-    width: 20%;
+    width: 10%;
     cursor: pointer;
+    padding: 2.5px 2.5px;
+    font-size: 14px;
     border: 1px solid #333333;
     border-radius: 8px;
     background-color: #CCCCCC;
@@ -115,5 +122,12 @@ html, body, #root {
     &:hover {
       background-color: #AAAAAA;
     }
+  }
+  &:last-child.none-mark {
+    width: 20%;
+    margin-left: 15px;
+    border: none;
+    background: none;
+    cursor: default;
   }
 }

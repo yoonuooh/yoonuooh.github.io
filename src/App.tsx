@@ -9,6 +9,7 @@ import styled from "styled-components"
 import Layout from "./components/layout"
 import ProtectRoute from "./components/protected-route"
 import Editor from "./editor"
+import Viewer from "./viewer"
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
   {
     path: "/editor/:urlId",
     element: <Editor />,
+  },
+  {
+    path: "/viewer/:urlId",
+    element: <Viewer />,
   },
 ]);
 

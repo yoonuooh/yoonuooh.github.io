@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
@@ -126,11 +128,13 @@ const Editor = () => {
 
   const [title, setTitle] = useState("");
   const { urlId = "" } = useParams<{ urlId: string }>();
+  const [name, setName] = useState("");
+
   const navigate = useNavigate();
   let data = null;
   
-  const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
-  //const server_ip = "http://192.168.219.103:5000";
+  //const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
+  const server_ip = "http://192.168.219.103:5000";
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -138,7 +142,7 @@ const Editor = () => {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (urlId === "") {
-      insertDataToBackend(title);
+      insertDataToBackend(title, name);
       const ok = confirm("Save Complete!");
       ok ? navigate("/") : null;
     } else {
@@ -151,7 +155,7 @@ const Editor = () => {
     navigate("/");
   }
   
-  const insertDataToBackend = async (title: string) => {
+  const insertDataToBackend = async (title: string, name: string) => {
     const content = editor.getJSON();
     console.log(content);
     try {
@@ -160,7 +164,7 @@ const Editor = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, content }),
+        body: JSON.stringify({ name, title, content }),
       });
       const data = await response.json();
       console.log(data);
@@ -181,7 +185,7 @@ const Editor = () => {
       data = await response.json();
       console.log(data);
       editor.commands.setContent(data.content);
-      setTitle(data.title); 
+      setTitle(data.title);
     } catch (error) {
       console.error('Error sending data to server:', error);
     }
@@ -207,6 +211,15 @@ const Editor = () => {
 
   useEffect(() => {
     loadDataFromBackend(urlId);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.displayName) {
+        setName(user.displayName);
+      } else {
+        setName("No user.");
+      }
+    });
+
+    return () => unsubscribe();
   }, [])
 
   return (

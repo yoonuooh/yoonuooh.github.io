@@ -5,12 +5,13 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 520px;
+  width: 300px;
   padding: 50px 0px;
 `;
 
 export const Title = styled.h1`
   font-size: 42px;
+  text-align: center;
 `;
 
 export const Form = styled.form`
