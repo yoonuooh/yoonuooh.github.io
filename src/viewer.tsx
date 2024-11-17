@@ -39,6 +39,9 @@ import DetailsContent from '@tiptap-pro/extension-details-content'
 import DetailsSummary from '@tiptap-pro/extension-details-summary'
 
 const Viewer = () => {
+  const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
+  //const server_ip = "http://192.168.219.103:5000";
+  
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -106,9 +109,6 @@ const Viewer = () => {
 
   const navigate = useNavigate();
   let data = null;
-  
-  //const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
-  const server_ip = "http://192.168.219.103:5000";
 
   const goHome = () => {
     navigate("/");

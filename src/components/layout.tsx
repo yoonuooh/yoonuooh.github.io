@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 
 export default function Layout() {
-  //const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
-  const server_ip = "http://192.168.219.103:5000";
+  const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
+  //const server_ip = "http://192.168.219.103:5000";
 
   let [data, setData] = useState<any[]>([]);
   const [name, setName] = useState("");
