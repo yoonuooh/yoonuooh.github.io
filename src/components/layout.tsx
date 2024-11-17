@@ -1,50 +1,10 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
-import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 
-const Wrapper = styled.div`
-  display: grid;
-  gap: 20px;
-  grid-template-columns: 1fr 4fr;
-  height: 100px;
-  padding: 50px 0px;
-  width: 100%;
-  max-width: 60px;
-`;
-
-const Menu = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-`;
-
-const MenuItem = styled.div`
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid white;
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-  svg {
-    width: 30px;
-    fill: white;
-  }
-  &.log-out {
-    border-color: tomato;
-    svg {
-      fill: tomato;
-    }
-  }
-`;
-
 export default function Layout() {
-  //const server_ip = "https://yoonuooh.duckdns.org";
-  const server_ip = "http://192.168.219.103";
-  const server_port = "5000";
+  const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
+  //const server_ip = "http://192.168.219.103:5000";
 
   const navigate = useNavigate();
   let [data, setData] = useState<any[]>([]);
@@ -62,7 +22,7 @@ export default function Layout() {
 
   const loadAllDataFromBackend = async () => {
     try {
-      const response = await fetch(`${server_ip}:${server_port}/api/load_all_data`, {
+      const response = await fetch(`${server_ip}/api/load_all_data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +39,7 @@ export default function Layout() {
 
   const deleteDataFromBackend = async (id: string) => {
     try {
-      const response = await fetch(`${server_ip}:${server_port}/api/delete_data`, {
+      const response = await fetch(`${server_ip}/api/delete_data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,37 +61,42 @@ export default function Layout() {
 
   return (
     <>
-      <Wrapper>
-        <Menu>
-          <MenuItem>
-            <button onClick={() => goNotice("")}>
-              Go to Editor
-            </button>
-          </MenuItem>
-          <MenuItem onClick={onLogOut} className="log-out">
-            <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path clipRule="evenodd" fillRule="evenodd" d="M17 4.25A2.25 2.25 0 0 0 14.75 2h-5.5A2.25 2.25 0 0 0 7 4.25v2a.75.75 0 0 0 1.5 0v-2a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 .75.75v11.5a.75.75 0 0 1-.75.75h-5.5a.75.75 0 0 1-.75-.75v-2a.75.75 0 0 0-1.5 0v2A2.25 2.25 0 0 0 9.25 18h5.5A2.25 2.25 0 0 0 17 15.75V4.25Z" />
-              <path clipRule="evenodd" fillRule="evenodd" d="M1 10a.75.75 0 0 1 .75-.75h9.546l-1.048-.943a.75.75 0 1 1 1.004-1.114l2.5 2.25a.75.75 0 0 1 0 1.114l-2.5 2.25a.75.75 0 1 1-1.004-1.114l1.048-.943H1.75A.75.75 0 0 1 1 10Z" />
-            </svg>
-          </MenuItem>
-        </Menu>
-        <div>
-          {data.length > 0 ? (
-            data.map((item, index) => (
-              <div key={index}>
-                <button onClick={() => goNotice(item._id)}>
-                  {item.title + "\n" + item.created_at + "\n" + item.modified_at}
-                </button>
-                <button onClick={() => deleteDataFromBackend(item._id)}>
-                  {item.title + "\nDelete"}
-                </button>
-              </div>
-            ))
-          ) : (
-            <p>None</p>
-          )}
+      <div className="top-menu">
+        <h1 className="temp-title">Home</h1>
+        <p>Name</p>
+        <button onClick={() => goNotice("")} className="new-page">
+          New Page
+        </button>
+        <button onClick={onLogOut} className="log-out">
+          Log Out
+        </button>
+      </div>
+      <div className="pages-head">
+        <div className="page-component-head">
+          <span>제목</span>
+          <span>수정일시</span>
+          <span>생성일시</span>
+          <span>삭제</span>
         </div>
-      </Wrapper>
+      </div>
+      <div className="pages">
+        {data.length > 0 ? (
+          data.map((item, index) => (
+            <div key={index} className="page-component">
+              <a onClick={() => goNotice(item._id)}>
+                {item.title}
+              </a>
+              <span>{item.created_at}</span>
+              <span>{item.modified_at}</span>
+              <span onClick={() => deleteDataFromBackend(item._id)}>
+                {"Delete"}
+              </span>
+            </div>
+          ))
+        ) : (
+          <p>None</p>
+        )}
+      </div>
       <Outlet />
     </>
   );

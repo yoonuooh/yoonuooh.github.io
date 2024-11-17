@@ -23,13 +23,15 @@ export const Form = styled.form`
 `;
 
 export const Input = styled.input`
-  padding: 10px 20px;
+  padding: 10px 0;
+  padding-left: 10px;
   border-radius: 50px;
-  border: none;
-  width: 100%;
+  border: 1px solid #777777;
+  width: 98%;
   font-size: 16px;
   &[type="submit"] {
     cursor: pointer;
+    width: 100%;
     &:hover {
       opacity: 0.8;
     }
@@ -43,6 +45,7 @@ export const Error = styled.span`
 
 export const Switcher = styled.span`
   margin-top: 20px;
+  padding-left: 10px;
   a {
     color: #1d9bf0;
   }

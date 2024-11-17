@@ -1,0 +1,119 @@
+/* Basic editor styles */
+@font-face {
+  font-family: 'NanumSquare';
+  src: url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+  font-weight: normal;
+  font-style: normal;
+}
+html, body, #root {
+  height: 100%;
+  --custom_color_accent: #667BC6;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+}
+.top-menu {
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  button {
+    border: 1px solid #333333;
+    background-color: #CCCCCC;
+    border-radius: 8px;
+    cursor: pointer;
+    &:hover {
+      background-color: #AAAAAA;
+    }
+  }
+}
+.temp-title {
+  width: 70%;
+  height: 30px;
+}
+.new-page {
+  width: 12%;
+  height: 30px;
+}
+.log-out {
+  width: 10%;
+  height: 30px;
+}
+
+.pages-head {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+}
+.page-component-head {
+  width: 100%;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+.page-component-head * {
+  width: 60%;
+  text-align: center;
+
+  &:first-child {
+    width: 100%;
+    text-align: left;
+  }
+  &:last-child {
+    width: 20%;
+    margin-left: 15px;
+  }
+}
+
+.pages {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+.page-component {
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+.page-component * {
+  width: 60%;
+  text-align: center;
+
+  &:first-child {
+    width: 100%;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+    text-align: left;
+  }
+  &:last-child {
+    width: 20%;
+    cursor: pointer;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    background-color: #CCCCCC;
+    margin-left: 15px;
+    &:hover {
+      background-color: #AAAAAA;
+    }
+  }
+}

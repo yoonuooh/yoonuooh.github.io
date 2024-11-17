@@ -5,7 +5,7 @@ import { auth } from "../firebase";
 import { FirebaseError } from "firebase/app";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function CreateAccount() {
+export default function Login() {
   const navigate = useNavigate();
   const [isLoading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
