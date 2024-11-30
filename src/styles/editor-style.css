@@ -57,7 +57,7 @@ html, body, #root {
 }
 .control-group {
   width: 100%;
-  height: 80%;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: top;
@@ -71,6 +71,10 @@ html, body, #root {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
+  position: sticky;
+  top: 0;
+  background-color: #FFFFFF;
+  z-index: 10;
 }
 .button-group button {
   margin: 5px 0;
@@ -79,23 +83,22 @@ html, body, #root {
   height: 26px;
 }
 /* ProseMirror Parent div */
-#root > div > div > div:nth-child(2):not(.button-group) {
-  width: 80%;
-  height: 100%;
+div:has(> div[aria-label="Rich-Text Editor"]) {
+  width: 50%;
+  height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: top;
   align-items: center;
-  padding: 0 20px 0 20px;
 }
 .ProseMirror {
   width: 100%;
   min-height: 95%;
+  height: auto;
   border-radius: 8px;
-  overflow-x: hidden;
-  overflow-y: auto;
   white-space: normal;
   word-wrap: break-word;
+  padding-top: 20px;
+  padding-bottom: 600px;
 }
 @media (max-width: 768px) {
   .button-group {
@@ -127,10 +130,15 @@ html, body, #root {
   --custom_color_code: #555555;
   height: 250px;
   width: 100%;
-  border: 2px solid lightgrey;
-  padding: 20px 20px;
+  border: none;
+  outline: none;
+  padding-left: 20px;
+  padding-right: 20px;
   :first-child {
     margin-top: 0;
+  }
+  :last-child {
+    margin-bottom: 0 !important;
   }
 
   /* List styles */
@@ -251,10 +259,9 @@ html, body, #root {
 
   table {
     border-collapse: collapse;
-    margin: 0;
-    overflow: hidden;
+    margin: 0 0 20px 0;
     table-layout: fixed;
-    width: 100%;
+    width: 80%;
 
     td,
     th {
@@ -298,7 +305,12 @@ html, body, #root {
 
   .tableWrapper {
     margin: 1.5rem 0;
-    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: visible;
+    overflow-y: visible;
   }
 
   &.resize-cursor {

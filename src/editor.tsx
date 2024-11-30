@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import "./styles/editor-style.css"
 
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
@@ -38,11 +39,9 @@ import 'katex/dist/katex.min.css'
 import Details from '@tiptap-pro/extension-details'
 import DetailsContent from '@tiptap-pro/extension-details-content'
 import DetailsSummary from '@tiptap-pro/extension-details-summary'
+import { server_ip } from "./main";
 
 const Editor = () => {
-  const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
-  //const server_ip = "http://192.168.219.103:5000";
-  
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -130,6 +129,7 @@ const Editor = () => {
 
 
   const [title, setTitle] = useState("");
+  const { category = "" } = useParams<{ category: string }>();
   const { urlId = "" } = useParams<{ urlId: string }>();
   const [name, setName] = useState("");
 
@@ -142,20 +142,20 @@ const Editor = () => {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (urlId === "") {
-      insertDataToBackend(title, name);
+      insertDataToBackend(title, name, category);
       const ok = confirm("Save Complete!");
-      ok ? navigate("/") : null;
+      ok ? navigate("/" + category) : null;
     } else {
-      updateDataToBackend(urlId, title);
+      updateDataToBackend(urlId, title, category);
       const ok = confirm("Update Complete!");
-      ok ? navigate("/") : null;
+      ok ? navigate("/" + category) : null;
     }
   }
-  const goHome = () => {
-    navigate("/");
-  }
+  const goCategory = () => {
+    navigate("/" + category);
+  };
   
-  const insertDataToBackend = async (title: string, name: string) => {
+  const insertDataToBackend = async (title: string, name: string, category: string) => {
     const content = editor.getJSON();
     console.log(content);
     try {
@@ -164,7 +164,7 @@ const Editor = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, title, content }),
+        body: JSON.stringify({ name, title, content, category }),
       });
       const data = await response.json();
       console.log(data);
@@ -173,14 +173,14 @@ const Editor = () => {
     }
   };
 
-  const loadDataFromBackend = async (id: string) => {
+  const loadDataFromBackend = async (id: string, category: string) => {
     try {
       const response = await fetch(`${server_ip}/api/load_data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id, category }),
       });
       data = await response.json();
       console.log(data);
@@ -191,7 +191,7 @@ const Editor = () => {
     }
   };
 
-  const updateDataToBackend = async (id: string, title: string) => {
+  const updateDataToBackend = async (id: string, title: string, category: string) => {
     const content = editor.getJSON();
     console.log(content);
     try {
@@ -200,7 +200,7 @@ const Editor = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id, title, content }),
+        body: JSON.stringify({ id, title, content, category }),
       });
       const data = await response.json();
       console.log('Response from server:', data);
@@ -210,12 +210,12 @@ const Editor = () => {
   }
 
   useEffect(() => {
-    loadDataFromBackend(urlId);
+    loadDataFromBackend(urlId, category);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user && user.displayName) {
         setName(user.displayName);
       } else {
-        setName("No user.");
+        setName("No user name info.");
       }
     });
 
@@ -226,7 +226,7 @@ const Editor = () => {
     <>
       <div className="editor">
         <form onSubmit={onSubmit} className="form">
-          <button onClick={goHome} className="previous-button">
+          <button onClick={goCategory} className="previous-button">
             &larr;
           </button>
           <input
@@ -565,7 +565,7 @@ const Editor = () => {
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 6H6m12 4H6m12 4H6m12 4H6"/>
                 </svg>
               </button>
-                <button
+              <button
                 onClick={() => editor.chain().focus().toggleBlockquote().run()}
                 className={editor.isActive("blockquote") ? "is-active" : ""}
               >

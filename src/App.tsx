@@ -10,6 +10,11 @@ import Layout from "./components/layout"
 import ProtectRoute from "./components/protected-route"
 import Editor from "./editor"
 import Viewer from "./viewer"
+import Regulation from "./routes/regulation"
+import Wiki from "./routes/wiki"
+import Document from "./routes/document"
+import ProjectDashboard from "./routes/project-dashboard"
+import DesignAutomation from "./routes/design-automation"
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -19,17 +24,19 @@ const Wrapper = styled.div`
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/free-notice",
     element: (
       <ProtectRoute>
-          <Layout />
+        <Layout />
       </ProtectRoute> 
     ),
   },
   {
-    path: "",
+    path: "/",
     element: (
-      <Home />
+      <ProtectRoute>
+        <Home />
+      </ProtectRoute>
     ),
   },
   {
@@ -49,16 +56,68 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/editor",
-    element: <Editor />,
+    path: ":category/editor",
+    element: (
+      <ProtectRoute>
+        <Editor />
+      </ProtectRoute>
+    ),
   },
   {
-    path: "/editor/:urlId",
-    element: <Editor />,
+    path: ":category/editor/:urlId",
+    element: (
+      <ProtectRoute>
+        <Editor />
+      </ProtectRoute>
+    ),
   },
   {
-    path: "/viewer/:urlId",
-    element: <Viewer />,
+    path: ":category/viewer/:urlId",
+    element: (
+      <ProtectRoute>
+        <Viewer />
+      </ProtectRoute>
+    ),
+  },
+  {
+    path: "/regulation",
+    element: (
+      <ProtectRoute>
+        <Regulation />
+      </ProtectRoute>
+    ),
+  },
+  {
+    path: "/wiki",
+    element: (
+      <ProtectRoute>
+        <Wiki />
+      </ProtectRoute>
+    ),
+  },
+  {
+    path: "/document",
+    element: (
+      <ProtectRoute>
+        <Document />
+      </ProtectRoute>
+    ),
+  },
+  {
+    path: "/project-dashboard",
+    element: (
+      <ProtectRoute>
+        <ProjectDashboard />
+      </ProtectRoute>
+    ),
+  },
+  {
+    path: "/design-automation",
+    element: (
+      <ProtectRoute>
+        <DesignAutomation />
+      </ProtectRoute>
+    ),
   },
 ]);
 

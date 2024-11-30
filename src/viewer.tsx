@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import "./styles/viewer-style.css"
 
 import { useEditor, EditorContent } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
@@ -37,11 +38,9 @@ import 'katex/dist/katex.min.css'
 import Details from '@tiptap-pro/extension-details'
 import DetailsContent from '@tiptap-pro/extension-details-content'
 import DetailsSummary from '@tiptap-pro/extension-details-summary'
+import { server_ip } from "./main";
 
-const Viewer = () => {
-  const server_ip = "https://port-0-notice-backend-m3lin2251ce3a47e.sel4.cloudtype.app";
-  //const server_ip = "http://192.168.219.103:5000";
-  
+const Viewer = () => {  
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -104,24 +103,25 @@ const Viewer = () => {
   }
 
   const [title, setTitle] = useState("");
+  const { category = "" } = useParams<{ category: string }>();
   const { urlId = "" } = useParams<{ urlId: string }>();
   const [name, setName] = useState("");
 
   const navigate = useNavigate();
   let data = null;
 
-  const goHome = () => {
-    navigate("/");
-  }
+  const goCategory = () => {
+    navigate("/" + category);
+  };
 
-  const loadDataFromBackend = async (id: string) => {
+  const loadDataFromBackend = async (id: string, category: string) => {
     try {
       const response = await fetch(`${server_ip}/api/load_data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id, category }),
       });
       data = await response.json();
       console.log(data);
@@ -136,9 +136,9 @@ const Viewer = () => {
   };
 
   useEffect(() => {
-    loadDataFromBackend(urlId);
+    loadDataFromBackend(urlId, category);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.displayName) {
+      if (user && user.displayName) { 
         setName(user.displayName);
       } else {
         setName("No user.");
@@ -151,8 +151,8 @@ const Viewer = () => {
   return (
     <>
       <div className="editor">
-        <div className="top-menu-viewer">
-          <button onClick={goHome} className="previous-button">
+        <div className="viewer-top-menu">
+          <button onClick={goCategory} className="previous-button">
             &larr;
           </button>
           <input
@@ -165,7 +165,7 @@ const Viewer = () => {
           />
           <span className="viewer-tag">Viewer</span>
         </div>
-        <div className="control-group">
+        <div className="viewer-control-group">
           <EditorContent editor={editor} />
         </div>
       </div>

@@ -1,13 +1,14 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import "../styles/home-style.css"
-import { server_ip } from "../main";
+import { adminEmail, server_ip } from "../main";
 
-export default function Layout() {
+export default function Regulation() {
   let [data, setData] = useState<any[]>([]);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [isSidebarVisible, setSidebarVisible] = useState(true);
   const location = useLocation();
   const category = location.pathname.startsWith('/') ? location.pathname.slice(1) : location.pathname;
@@ -53,7 +54,6 @@ export default function Layout() {
   const goDesignAutomation = () => {
     navigate("/design-automation");
   };
-
   const loadAllDataFromBackend = async (category: string) => {
     try {
       const response = await fetch(`${server_ip}/api/load_all_data`, {
@@ -93,10 +93,12 @@ export default function Layout() {
   useEffect(() => {
     loadAllDataFromBackend(category);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.displayName) {
+      if (user && user.displayName && user.email) {
         setName(user.displayName);
+        setEmail(user.email);
       } else {
-        setName("No user.");
+        setName("No user name info.");
+        setEmail("No user email info.");
       }
     });
 
@@ -139,11 +141,15 @@ export default function Layout() {
               <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" />
             </svg>
           </button>
-          <h1 className="page-title">자유게시판</h1>
+          <h1 className="page-title">회사 규정</h1>
           <span className="name">{name} 님,<br />안녕하세요.</span>
-          <button onClick={() => goNotice("")} className="new-page">
-            New Page
-          </button>
+          {email === adminEmail ? (
+            <button onClick={() => goNotice("")} className="new-page">
+              New Page
+            </button>
+          ) : (
+            ""
+          )}
           <button onClick={onLogOut} className="log-out">
             Log Out
           </button>
@@ -160,7 +166,7 @@ export default function Layout() {
           {data.length > 0 ? (
             data.map((item) => (
               <div key={item._id} className="page-component">
-                {name === item.name ? (
+                {name === item.name && email === adminEmail ? (
                   <a onClick={() => goNotice(item._id)}>
                     {item.title}
                   </a>
