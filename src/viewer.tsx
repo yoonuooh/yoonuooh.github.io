@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { auth } from "./firebase";
-import { onAuthStateChanged } from "firebase/auth";
 import "./styles/viewer-style.css"
 
 import { useEditor, EditorContent } from "@tiptap/react"
@@ -103,13 +102,17 @@ const Viewer = () => {
   }
 
   const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
+  const [isEditable, setEditable] = useState(false);
   const { category = "" } = useParams<{ category: string }>();
   const { urlId = "" } = useParams<{ urlId: string }>();
-  const [name, setName] = useState("");
 
   const navigate = useNavigate();
-  let data = null;
+  editor.setEditable(false);
 
+  const goNotice = (id: string) => {
+    navigate("/" + category + "/editor/" + id);
+  };
   const goCategory = () => {
     navigate("/" + category);
   };
@@ -123,12 +126,12 @@ const Viewer = () => {
         },
         body: JSON.stringify({ id, category }),
       });
-      data = await response.json();
+      const data = await response.json();
       console.log(data);
       editor.commands.setContent(data.content);
       setTitle(data.title);
-      if (name !== data.name) {
-        editor.setEditable(false);
+      if (name === data.name) {
+        setEditable(true);
       }
     } catch (error) {
       console.error('Error sending data to server:', error);
@@ -136,17 +139,12 @@ const Viewer = () => {
   };
 
   useEffect(() => {
-    loadDataFromBackend(urlId, category);
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.displayName) { 
-        setName(user.displayName);
-      } else {
-        setName("No user.");
-      }
-    });
-
-    return () => unsubscribe();
-  }, [])
+    const user = auth.currentUser;
+    if (user && user.displayName) {
+      setName(user.displayName);
+      name ? loadDataFromBackend(urlId, category) : null;
+    }
+  }, [name])
 
   return (
     <>
@@ -155,6 +153,7 @@ const Viewer = () => {
           <button onClick={goCategory} className="previous-button">
             &larr;
           </button>
+          <span className="viewer-editor-tag">Viewer</span>
           <input
             className="input-title"
             value={title}
@@ -163,7 +162,13 @@ const Viewer = () => {
             type="text"
             disabled
           />
-          <span className="viewer-tag">Viewer</span>
+          {isEditable ? (
+            <button onClick={() => goNotice(urlId)} className="new-page">
+              Edit
+            </button>
+          ) : (
+            ""
+          )}
         </div>
         <div className="viewer-control-group">
           <EditorContent editor={editor} />

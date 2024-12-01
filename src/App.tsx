@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: ":category/editor",
+    path: "/:category/editor",
     element: (
       <ProtectRoute>
         <Editor />
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: ":category/editor/:urlId",
+    path: "/:category/editor/:urlId",
     element: (
       <ProtectRoute>
         <Editor />
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: ":category/viewer/:urlId",
+    path: "/:category/viewer/:urlId",
     element: (
       <ProtectRoute>
         <Viewer />

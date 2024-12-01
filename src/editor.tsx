@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { auth } from "./firebase";
-import { onAuthStateChanged } from "firebase/auth";
 import "./styles/editor-style.css"
 
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react"
@@ -40,6 +38,8 @@ import Details from '@tiptap-pro/extension-details'
 import DetailsContent from '@tiptap-pro/extension-details-content'
 import DetailsSummary from '@tiptap-pro/extension-details-summary'
 import { server_ip } from "./main";
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "./firebase"
 
 const Editor = () => {
   const editor = useEditor({
@@ -92,7 +92,6 @@ const Editor = () => {
       DetailsSummary,
       DetailsContent,
       TaskList,
-      TaskList,
       TaskItem.configure({
         nested: true,
       }),
@@ -129,13 +128,25 @@ const Editor = () => {
 
 
   const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const { category = "" } = useParams<{ category: string }>();
   const { urlId = "" } = useParams<{ urlId: string }>();
-  const [name, setName] = useState("");
 
   const navigate = useNavigate();
-  let data = null;
 
+  useEffect(() => {
+    loadDataFromBackend(urlId, category);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.displayName) {
+        setName(user.displayName);
+      } else {
+        setName("No user name info.");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [])
+  
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   }
@@ -182,10 +193,12 @@ const Editor = () => {
         },
         body: JSON.stringify({ id, category }),
       });
-      data = await response.json();
+      const data = await response.json();
       console.log(data);
       editor.commands.setContent(data.content);
       setTitle(data.title);
+
+      return data.name
     } catch (error) {
       console.error('Error sending data to server:', error);
     }
@@ -209,26 +222,14 @@ const Editor = () => {
     }
   }
 
-  useEffect(() => {
-    loadDataFromBackend(urlId, category);
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.displayName) {
-        setName(user.displayName);
-      } else {
-        setName("No user name info.");
-      }
-    });
-
-    return () => unsubscribe();
-  }, [])
-
   return (
     <>
       <div className="editor">
-        <form onSubmit={onSubmit} className="form">
+        <form onSubmit={onSubmit} className="editor-top-menu">
           <button onClick={goCategory} className="previous-button">
             &larr;
           </button>
+          <span className="viewer-editor-tag">Editor</span>
           <input
             className="input-title"
             onChange={onChange}

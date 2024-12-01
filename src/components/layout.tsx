@@ -96,7 +96,7 @@ export default function Layout() {
       if (user && user.displayName) {
         setName(user.displayName);
       } else {
-        setName("No user.");
+        setName("No user name info.");
       }
     });
 
@@ -160,15 +160,9 @@ export default function Layout() {
           {data.length > 0 ? (
             data.map((item) => (
               <div key={item._id} className="page-component">
-                {name === item.name ? (
-                  <a onClick={() => goNotice(item._id)}>
-                    {item.title}
-                  </a>
-                ) : (
-                  <a onClick={() => goViewer(item._id)}>
-                    {item.title}
-                  </a>
-                )}
+                <a onClick={() => goViewer(item._id)}>
+                  {item.title}
+                </a>
                 <span>{item.created_at ? item.created_at : "-"}<br />{item.modified_at ? item.modified_at : "-"}</span>
                 <span>{item.name}</span>
                 {name === item.name ? (

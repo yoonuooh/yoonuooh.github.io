@@ -30,6 +30,7 @@ html, body, #root {
   background-color: #CCCCCC;
   button {
     font-size: 20px;
+    text-align: left;
     margin-top: 5px;
     margin-bottom: 5px;
     padding: 10px 5px;
