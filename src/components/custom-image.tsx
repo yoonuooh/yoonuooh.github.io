@@ -72,14 +72,15 @@ export const CustomImage = Node.create({
                     reader.onload = () => {
                       const src = reader.result;
 
-                      // Insert custom image node
-                      view.dispatch(
-                        view.state.tr.replaceSelectionWith(
-                          view.state.schema.nodes.customImage.create({
-                            src,
-                          })
-                        )
+                      // Insert the custom image node directly
+                      const transaction = view.state.tr.replaceSelectionWith(
+                        view.state.schema.nodes.customImage.create({
+                          src: src,
+                          alt: file.name,
+                          title: file.name,
+                        })
                       );
+                      view.dispatch(transaction);
                     };
 
                     reader.readAsDataURL(file);
@@ -89,7 +90,7 @@ export const CustomImage = Node.create({
                 }
               }
             }
-            return false; // 다른 붙여넣기 동작은 기본값 사용
+            return false; // 기본 붙여넣기 동작을 처리
           },
         },
       }),

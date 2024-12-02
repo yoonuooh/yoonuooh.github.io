@@ -39,6 +39,9 @@ import DetailsContent from '@tiptap-pro/extension-details-content'
 import DetailsSummary from '@tiptap-pro/extension-details-summary'
 import { server_ip } from "./main";
 
+// Custom Node
+import { CustomImage } from './components/custom-image';
+
 const Viewer = () => {  
   const editor = useEditor({
     extensions: [
@@ -94,6 +97,7 @@ const Viewer = () => {
       TaskItem.configure({
         nested: true,
       }),
+      CustomImage,
     ],
   });
 
