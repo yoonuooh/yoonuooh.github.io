@@ -150,7 +150,8 @@ export default function Document() {
         <div className="pages-head">
           <div className="page-component-head">
             <span>제목</span>
-            <span>생성/수정</span>
+            <span>생성일시</span>
+            <span>수정일시</span>
             <span>작성자</span>
             <span>삭제</span>
           </div>
@@ -159,16 +160,11 @@ export default function Document() {
           {data.length > 0 ? (
             data.map((item) => (
               <div key={item._id} className="page-component">
-                {name === item.name ? (
-                  <a onClick={() => goNotice(item._id)}>
-                    {item.title}
-                  </a>
-                ) : (
-                  <a onClick={() => goViewer(item._id)}>
-                    {item.title}
-                  </a>
-                )}
-                <span>{item.created_at ? item.created_at : "-"}<br />{item.modified_at ? item.modified_at : "-"}</span>
+                <a onClick={() => goViewer(item._id)}>
+                  {item.title}
+                </a>
+                <span>{item.created_at ? item.created_at : "-"}</span>
+                <span>{item.modified_at ? item.modified_at : "-"}</span>
                 <span>{item.name}</span>
                 {name === item.name ? (
                   <span onClick={() => deleteDataFromBackend(item._id, category)}>

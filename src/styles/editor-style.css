@@ -98,7 +98,7 @@ div:has(> div[aria-label="Rich-Text Editor"]) {
   white-space: normal;
   word-wrap: break-word;
   padding-top: 20px;
-  padding-bottom: 600px;
+  padding-bottom: 800px;
 }
 @media (max-width: 768px) {
   .button-group {
@@ -261,7 +261,7 @@ div:has(> div[aria-label="Rich-Text Editor"]) {
     border-collapse: collapse;
     margin: 0 0 20px 0;
     table-layout: fixed;
-    width: 80%;
+    width: 60%;
 
     td,
     th {
@@ -308,7 +308,7 @@ div:has(> div[aria-label="Rich-Text Editor"]) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     overflow-x: visible;
     overflow-y: visible;
   }
@@ -316,6 +316,19 @@ div:has(> div[aria-label="Rich-Text Editor"]) {
   &.resize-cursor {
     cursor: ew-resize;
     cursor: col-resize;
+  }
+
+  div.custom-image-wrapper {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    resize: both;
+    overflow: hidden;
+  }
+  div.custom-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 }
 

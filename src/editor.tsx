@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import { server_ip } from "./main";
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "./firebase"
 import "./styles/editor-style.css"
 
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react"
@@ -37,9 +40,9 @@ import 'katex/dist/katex.min.css'
 import Details from '@tiptap-pro/extension-details'
 import DetailsContent from '@tiptap-pro/extension-details-content'
 import DetailsSummary from '@tiptap-pro/extension-details-summary'
-import { server_ip } from "./main";
-import { onAuthStateChanged } from "firebase/auth"
-import { auth } from "./firebase"
+
+// Custom Node
+import { CustomImage } from './components/custom-image';
 
 const Editor = () => {
   const editor = useEditor({
@@ -95,6 +98,7 @@ const Editor = () => {
       TaskItem.configure({
         nested: true,
       }),
+      CustomImage,
     ],
   });
 
