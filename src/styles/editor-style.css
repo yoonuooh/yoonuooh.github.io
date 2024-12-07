@@ -320,15 +320,14 @@ div:has(> div[aria-label="Rich-Text Editor"]) {
 
   div.custom-image-wrapper {
     display: inline-block;
-    width: auto;
-    height: auto;
     resize: both;
-    overflow: hidden;
+    overflow: auto;
   }
   div.custom-image-wrapper img {
-    width: 100%;
-    height: auto;
     display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: scale-down;
   }
 }
 
